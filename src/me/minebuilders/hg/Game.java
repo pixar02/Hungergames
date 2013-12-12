@@ -244,7 +244,7 @@ public class Game {
 
 		for (String s : players) {
 			Player p = Bukkit.getPlayer(s);
-			if (p.getLocation().getBlock().equals(l.getBlock()))
+			if (p != null && p.getLocation().getBlock().equals(l.getBlock()))
 				return true;
 		}
 		return false;
@@ -357,7 +357,9 @@ public class Game {
 
 			for (String s : win) {
 				Vault.economy.depositPlayer(s, db);
-				Util.msg(Bukkit.getPlayer(s), "&aYou won " + db + " for winning HungerGames!");
+				Player p = Bukkit.getPlayer(s);
+				if (p != null)
+				Util.msg(p, "&aYou won " + db + " for winning HungerGames!");
 			}
 		}
 

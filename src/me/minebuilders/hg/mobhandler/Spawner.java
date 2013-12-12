@@ -88,6 +88,8 @@ public class Spawner implements Runnable{
 	}
 
 	private Location getSafeLoc(World w, int x, int y, int z, int trys) {
+		if (trys <= 0) return null;
+		
 		Block b = w.getBlockAt(x,y,z);
 		if (b.getType().isSolid()) {
 			return getSafeLoc(w, x, y + 1, z, trys--);
