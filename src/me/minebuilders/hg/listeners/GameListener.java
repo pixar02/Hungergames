@@ -28,7 +28,6 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -325,14 +324,6 @@ public class GameListener implements Listener {
 
 	@EventHandler
 	public void onlogout(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		if (plugin.players.containsKey(player.getName())) {
-			plugin.players.get(player.getName()).getGame().leave(player);
-		}
-	}
-
-	@EventHandler
-	public void onkick(PlayerKickEvent event) {
 		Player player = event.getPlayer();
 		if (plugin.players.containsKey(player.getName())) {
 			plugin.players.get(player.getName()).getGame().leave(player);
