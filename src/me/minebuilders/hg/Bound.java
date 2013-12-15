@@ -41,7 +41,7 @@ public class Bound {
 		int cx = loc.getBlockX();
 		int cy = loc.getBlockY();
 		int cz = loc.getBlockZ();
-		if ((cx > x && cx < x2) && (cy > y && cy < y2) && (cz > z && cz < z2)) {
+		if ((cx >= x && cx < x2 + 1) && (cy >= y && cy < y2 + 1) && (cz >= z && cz < z2 + 1)) {
 			return true;
 		}
 		return false;
