@@ -8,6 +8,7 @@ import me.minebuilders.hg.commands.AddSpawnCmd;
 import me.minebuilders.hg.commands.BaseCmd;
 import me.minebuilders.hg.commands.CreateCmd;
 import me.minebuilders.hg.commands.DebugCmd;
+import me.minebuilders.hg.commands.DeleteCmd;
 import me.minebuilders.hg.commands.JoinCmd;
 import me.minebuilders.hg.commands.KitCmd;
 import me.minebuilders.hg.commands.LeaveCmd;
@@ -104,6 +105,8 @@ public class HG extends JavaPlugin {
 		cmds.put("stop", new StopCmd());
 		cmds.put("toggle", new ToggleCmd());
 		cmds.put("setexit", new SetExitCmd());
+		cmds.put("delete", new DeleteCmd());
+
 
 		for (String bc : cmds.keySet())
 			getServer().getPluginManager().addPermission(new Permission("hg." + bc));
