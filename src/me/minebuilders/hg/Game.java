@@ -348,6 +348,7 @@ public class Game {
 				HG.plugin.players.get(p.getName()).restore(p);
 				HG.plugin.players.remove(p.getName());
 				win.add(p.getName());
+				sb.restoreSB(p);
 			}
 		}
 		players.clear();
