@@ -2,17 +2,15 @@ package me.minebuilders.hg.mobhandler;
 
 import java.util.Random;
 
+import me.minebuilders.hg.Game;
+import me.minebuilders.hg.HG;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-
-import me.minebuilders.hg.Game;
-import me.minebuilders.hg.HG;
 
 public class Spawner implements Runnable{
 
@@ -42,9 +40,9 @@ public class Spawner implements Runnable{
 				x = x + ran1;
 				z = z + ran2;
 
-				l = getSafeLoc(w, x, y, z, 30);
+				l = getSafeLoc(w, x, y, z);
 
-				if (g.isInRegion(l))
+				if (l != null && g.isInRegion(l))
 					w.spawnEntity(l, pickRandomMob(!isDay(w), rg.nextInt(10)));
 			}
 		}
@@ -87,24 +85,31 @@ public class Spawner implements Runnable{
 		return r;
 	}
 
-	private Location getSafeLoc(World w, int x, int y, int z, int trys) {
-		if (trys <= 0) return null;
+	@SuppressWarnings("deprecation")
+	private Location getSafeLoc(World w, int x, int y, int z) {
+		int trys = 30;
 		
-		Block b = w.getBlockAt(x,y,z);
-		if (b.getType().isSolid()) {
-			return getSafeLoc(w, x, y + 1, z, trys--);
-		} else if (b.getRelative(BlockFace.DOWN).getType().equals(Material.AIR)) {
-			return getSafeLoc(w, x, y - 1, z, trys--);
-		} else if (b.getRelative(BlockFace.UP).getType().isSolid()) {
-			int ran1 = getRandomNumber();
-			int ran2 = getRandomNumber();
+		while (trys > 0) {
+			
+			trys--;
+			
+			Material m = Material.getMaterial(w.getBlockTypeIdAt(x, y, z));
+			
+			if (m.isSolid()) {
+				y++;
+			} else if (w.getBlockTypeIdAt(x, y - 1, z) == 0) {
+				y--;
+			} else if (Material.getMaterial(w.getBlockTypeIdAt(x, y + 1, z)).isSolid()) {
+				int ran1 = getRandomNumber();
+				int ran2 = getRandomNumber();
 
-			x = x + ran1;
-			z = z + ran2;
-			return getSafeLoc(w, x, y, z, trys--);
-		} else {
-			return new Location(w, x,y,z);
+				x = x + ran1;
+				z = z + ran2;
+			} else {
+				return new Location(w, x, y, z);
+			}
 		}
+		return null;
 	}
 	
 	public void stop() {
