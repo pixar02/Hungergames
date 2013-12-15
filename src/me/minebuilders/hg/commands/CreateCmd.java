@@ -16,7 +16,7 @@ public class CreateCmd extends BaseCmd {
 	public CreateCmd() {
 		forcePlayer = true;
 		cmdName = "create";
-		argLength = 4;
+		argLength = 5;
 		usage = "<&cname&b> <&cmin-player&b> <&cmax-player&b> <&ctime&b>";
 	}
 
