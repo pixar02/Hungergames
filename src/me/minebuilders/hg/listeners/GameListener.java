@@ -15,6 +15,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,9 +24,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -77,6 +77,43 @@ public class GameListener implements Listener {
 		}
 	}
 
+
+	@EventHandler
+	public void onDIe(PlayerDeathEvent event) {
+		final Player p = event.getEntity();
+
+		PlayerData pd = plugin.players.get(p.getName());
+
+		if (pd != null) {
+			final Game g = pd.getGame();
+
+			p.setHealth(20);
+
+			LivingEntity killer = p.getKiller();
+
+			if (killer != null) {
+				g.msgDef("&l&d" + HG.killmanager.getKillString(p.getName(), killer));
+			} else {
+				g.msgDef("&d" + HG.killmanager.getDeathString(p.getLastDamageCause().getCause(), p.getName()));
+			}
+			event.setDeathMessage(null);
+			
+			event.getDrops().clear();
+			
+			dropInv(p);
+			g.exit(p);
+			
+			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+
+				@Override
+				public void run() {
+					g.leave(p);
+					checkStick(g);
+				}
+			}, 10L);
+		}
+	}
+
 	@EventHandler
 	public void onSprint(FoodLevelChangeEvent event) {
 		Player p = (Player)event.getEntity();
@@ -85,29 +122,6 @@ public class GameListener implements Listener {
 			if (st == Status.WAITING || st == Status.COUNTDOWN) {
 			event.setFoodLevel(1);
 			event.setCancelled(true);
-			}
-		}
-	}
-
-	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled = false)
-	public void onDamage(EntityDamageEvent event) {
-		Entity defender = event.getEntity();
-		DamageCause damager = event.getCause();
-
-		if (defender instanceof Player && (event.getDamage() + 2) >= ((Player) defender).getHealth() && !damager.equals(DamageCause.ENTITY_ATTACK) && !damager.equals(DamageCause.PROJECTILE)) {
-			Player d = (Player)defender;
-			if (plugin.players.containsKey(d.getName())) {
-				Game g = plugin.players.get(d.getName()).getGame();
-				if (g.getStatus() != Status.RUNNING) {
-					event.setCancelled(true);
-					d.setHealth(20);
-				} else {
-				dropInv(d);
-				event.setCancelled(true);
-				g.msgDef("&d" + HG.killmanager.getDeathString(damager, d.getName()));
-				g.leave(d);
-				checkStick(g);
-			}
 			}
 		}
 	}
@@ -197,12 +211,6 @@ public class GameListener implements Listener {
 				} else if (pd.isOnTeam(p.getName()) && damager instanceof Player && pd.getTeam().isOnTeam(((Player)damager).getName())) {
 					Util.scm(((Player)damager), "&c" + p.getName() + " is on your team!");
 					event.setCancelled(true);
-				} else if (event.getDamage() >= p.getHealth()) {
-					dropInv(p);
-					g.msgDef("&l&d" + HG.killmanager.getKillString(p.getName(), damager));
-					g.leave(p);
-					event.setCancelled(true);
-					checkStick(g);
 				} else if (event.isCancelled()) event.setCancelled(false);
 			}
 		}
