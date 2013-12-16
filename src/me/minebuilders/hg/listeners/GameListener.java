@@ -76,8 +76,7 @@ public class GameListener implements Listener {
 			}
 		}
 	}
-
-
+	
 	@EventHandler
 	public void onDIe(PlayerDeathEvent event) {
 		final Player p = event.getEntity();

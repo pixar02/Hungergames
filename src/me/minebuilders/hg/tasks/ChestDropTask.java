@@ -57,10 +57,11 @@ public class ChestDropTask implements Runnable {
 
 		for (String s : g.getPlayers()) {
 			Player p = Bukkit.getPlayer(s);
+			if (p != null) {
 			Util.scm(p, "&6*&b&m                                                                             &6*");
 			Util.scm(p, "&b| &3A Care-Package was just dropped near: &f"+x+"&3, &f"+y+"&3, &f"+z);
 			Util.scm(p, "&6*&b&m                                                                             &6*");
-
+			}
 		}
 	}
 

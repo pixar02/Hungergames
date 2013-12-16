@@ -28,7 +28,7 @@ public class TeamCmd extends BaseCmd {
 
 		if (args[1].equalsIgnoreCase("invite")) {
 
-			if (args.length >= 2) {
+			if (args.length >= 3) {
 
 				Player p = Bukkit.getPlayer(args[2]);
 
@@ -72,6 +72,8 @@ public class TeamCmd extends BaseCmd {
 				t.invite(p);
 				Util.msg(player, "&c" + p.getName() + " &3Has been invited!");
 				return true;
+			} else {
+				Util.msg(player, "&cWrong Usage: &3/hg &bteam invite <&cname&b>");
 			}
 		} else if (args[1].equalsIgnoreCase("accept")) {
 

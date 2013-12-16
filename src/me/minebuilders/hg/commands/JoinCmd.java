@@ -16,11 +16,16 @@ public class JoinCmd extends BaseCmd {
 
 	@Override
 	public boolean run() {
-		Game g = HG.manager.getGame(args[1]);
-		if (g != null && !g.getPlayers().contains(player.getName())) {
-			g.join(player);
+
+		if (HG.plugin.players.containsKey(player.getName())) {
+			Util.msg(player, "&cYou're already in a game!");
 		} else {
-			Util.msg(player, "&cThis arena does not exist!");
+			Game g = HG.manager.getGame(args[1]);
+			if (g != null && !g.getPlayers().contains(player.getName())) {
+				g.join(player);
+			} else {
+				Util.msg(player, "&cThis arena does not exist!");
+			}
 		}
 		return true;
 	}
