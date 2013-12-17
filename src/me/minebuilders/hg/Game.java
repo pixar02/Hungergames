@@ -30,7 +30,7 @@ public class Game {
 	private Bound b;
 	private List<String> players = new ArrayList<String>();
 	private ArrayList<Location> chests = new ArrayList<Location>();
-	private ArrayList<BlockState> blocks = new ArrayList<BlockState>();
+	private List<BlockState> blocks = new ArrayList<BlockState>();
 	private Location exit;
 	private Status status;
 	private int minplayers;
@@ -96,10 +96,26 @@ public class Game {
 		updateLobbyBlock();
 	}
 
+	public void addState(BlockState s) {
+		if (s.getType() != Material.AIR) {
+			blocks.add(s);
+		}
+	}
+	
 	public void recordBlockBreak(Block bl) {
-		blocks.add(bl.getState());
-		if (!bl.getType().isSolid() || !bl.getType().isBlock()) {
-			blocks.add(bl.getRelative(BlockFace.UP).getState());
+		addState(bl.getState());
+		Block top = bl.getRelative(BlockFace.UP);
+
+		if (!top.getType().isSolid() || !top.getType().isBlock()) {
+			addState(bl.getRelative(BlockFace.UP).getState());
+		}
+
+		for (BlockFace bf : Util.faces) {
+			Block rel = bl.getRelative(bf);
+
+			if (Util.isAttached(bl, rel)) {
+				addState(rel.getState());
+			}
 		}
 	}
 
@@ -111,7 +127,7 @@ public class Game {
 		return this.status;
 	}
 
-	public ArrayList<BlockState> getBlocks() {
+	public List<BlockState> getBlocks() {
 		return blocks;
 	}
 

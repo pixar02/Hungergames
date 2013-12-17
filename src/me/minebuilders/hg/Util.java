@@ -10,14 +10,19 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.FireworkEffect.Type;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.material.Attachable;
+import org.bukkit.material.MaterialData;
 
 public class Util {
 
+	public static final BlockFace[] faces = new BlockFace[] {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
+	
 	private static final Logger log = Logger.getLogger("Minecraft");
 
 	public static void log(String s) { log.info("[HungerGames] " + s); }
@@ -94,5 +99,18 @@ public class Util {
 		fm.addEffect(e);
 		fm.setPower(2);
 		fw.setFireworkMeta(fm);
+	}
+	
+	public static boolean isAttached(Block base, Block attached) {
+		MaterialData bs = attached.getState().getData();
+
+		if (!(bs instanceof Attachable)) return false;
+
+		Attachable at = (Attachable) bs;
+		
+		if (attached.getRelative(at.getAttachedFace()).equals(base))
+			return true;
+		
+		return false;
 	}
 }
