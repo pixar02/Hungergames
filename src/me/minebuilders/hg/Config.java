@@ -75,7 +75,7 @@ public class Config {
 		if (giveReward) {
 			try {
 				Vault.setupEconomy();
-			} catch (Exception e) {
+			} catch (NoClassDefFoundError e) {
 				Util.log("Unable to setup vault! Rewards will not be given out..");
 				giveReward = false;
 			}
