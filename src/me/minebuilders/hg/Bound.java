@@ -35,13 +35,13 @@ public class Bound {
 		Random r = new Random();
 		return new Integer[] {r.nextInt(x2 - x + 1) + x, y2, r.nextInt(z2 - z + 1) + z};
 	}
-	
+
 	public boolean isInRegion(Location loc) {
 		if (!loc.getWorld().getName().equals(world)) return false;
 		int cx = loc.getBlockX();
 		int cy = loc.getBlockY();
 		int cz = loc.getBlockZ();
-		if ((cx >= x && cx < x2 + 1) && (cy >= y && cy < y2 + 1) && (cz >= z && cz < z2 + 1)) {
+		if ((cx >= x && cx <= x2) && (cy >= y && cy <= y2) && (cz >= z && cz <= z2)) {
 			return true;
 		}
 		return false;
