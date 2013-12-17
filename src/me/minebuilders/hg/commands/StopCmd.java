@@ -21,7 +21,7 @@ public class StopCmd extends BaseCmd {
 		Game g = HG.manager.getGame(args[1]);
 		if (g != null) {
 			g.stop();
-			Util.scm(sender, "&3" + args[1] + " &b Has been stopped!");
+			Util.scm(sender, "&3" + args[1] + "&b Has been stopped!");
 		} else {
 			sender.sendMessage(ChatColor.RED + "This game does not exist!");
 		}

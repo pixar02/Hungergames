@@ -1,7 +1,6 @@
 package me.minebuilders.hg.commands;
 
 import org.bukkit.ChatColor;
-
 import me.minebuilders.hg.HG;
 import me.minebuilders.hg.Status;
 public class KitCmd extends BaseCmd {
