@@ -46,6 +46,8 @@ public class HG extends JavaPlugin {
 	public HashMap<String, PlayerData> players = new HashMap<String, PlayerData>();
 	public HashMap<String, PlayerSession> playerses = new HashMap<String, PlayerSession>();
 	public HashMap<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
+	
+	//Lists
 	public List<Game> games = new ArrayList<Game>();
 	
 	//Instances
