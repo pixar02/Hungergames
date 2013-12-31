@@ -1,6 +1,7 @@
 package me.minebuilders.hg;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -86,6 +87,7 @@ public class Game {
 	}
 
 	public void forceRollback() {
+		Collections.reverse(blocks);
 		for (BlockState st : blocks) {
 			st.update(true);
 		}
@@ -103,7 +105,6 @@ public class Game {
 	}
 	
 	public void recordBlockBreak(Block bl) {
-		addState(bl.getState());
 		Block top = bl.getRelative(BlockFace.UP);
 
 		if (!top.getType().isSolid() || !top.getType().isBlock()) {
@@ -117,6 +118,7 @@ public class Game {
 				addState(rel.getState());
 			}
 		}
+		addState(bl.getState());
 	}
 
 	public void recordBlockPlace(BlockState bs) {
@@ -128,6 +130,7 @@ public class Game {
 	}
 
 	public List<BlockState> getBlocks() {
+		Collections.reverse(blocks);
 		return blocks;
 	}
 

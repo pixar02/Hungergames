@@ -10,6 +10,7 @@ import me.minebuilders.hg.Bound;
 import me.minebuilders.hg.Game;
 import me.minebuilders.hg.HG;
 import me.minebuilders.hg.Util;
+import me.minebuilders.hg.tasks.CompassTask;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -68,6 +69,9 @@ public class Data {
 	public void load() {
 		int freeroam = plugin.getConfig().getInt("settings.free-roam");
 		if (new File(plugin.getDataFolder(), "arenas.yml").exists()) {
+			
+			new CompassTask(plugin);
+			
 			for (String s : arenadat.getConfigurationSection("arenas").getKeys(false)) {
 				boolean isReady = true;
 				List<Location> spawns = new ArrayList<Location>();
