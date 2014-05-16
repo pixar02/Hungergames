@@ -26,11 +26,9 @@ public class Manager {
 
 	private HG plugin;
 	private Random rg = new Random();
-	private int itemsize = 0;
 	
 	public Manager(HG p) {
 		plugin = p;
-		itemsize = p.items.size();
 	}
 	
 	public void runDebugger(CommandSender sender, String s) {
@@ -122,7 +120,7 @@ public class Manager {
 	}
 
 	public ItemStack randomitem() {
-		return plugin.items.get(rg.nextInt(itemsize) + 1);
+		return plugin.items.get(HG.ri.size);
 	}
 	
 	public boolean isInRegion(Location l) {

@@ -15,6 +15,7 @@ public class RandomItems {
 
 	private FileConfiguration item = null;
 	private File customConfigFile = null;
+	public int size = 0;
 	private final HG plugin;
 
 	public RandomItems(HG plugin) {
@@ -57,6 +58,7 @@ public class RandomItems {
 	}
 
 	public void load() {
+		size = 0;
 		if (item.getStringList("items").isEmpty()) {
 			setDefaultss();
 			saveCustomConfig();
@@ -71,9 +73,11 @@ public class RandomItems {
 					while(c != 0) {
 						c--;
 						plugin.items.put(plugin.items.size() + 1, plugin.ism.getItem(s.replace("x:", ""), true));
+						size++;
 					}
 				} else
 					plugin.items.put(plugin.items.size() + 1, plugin.ism.getItem(s, true));
+			size++;
 		}
 		Util.log(plugin.items.size() + " Random items have been loaded!");
 	}

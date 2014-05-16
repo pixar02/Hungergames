@@ -17,6 +17,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -196,9 +197,12 @@ public class GameListener implements Listener {
 	public void onAttack(EntityDamageByEntityEvent event) {
 		Entity defender = event.getEntity();
 		Entity damager = event.getDamager();
-		if (damager instanceof Arrow)
-			damager = ((Arrow)damager).getShooter();
-		if (defender instanceof Player) {
+		
+		if (damager instanceof Projectile) {
+			damager = (Entity) ((Projectile)damager).getShooter();
+		}
+		
+		if (defender instanceof Player && damager != null) {
 			Player p = (Player)defender;
 			PlayerData pd = plugin.players.get(p.getName());
 
