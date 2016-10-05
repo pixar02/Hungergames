@@ -2,6 +2,7 @@ package me.minebuilders.hg;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -15,6 +16,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.material.Attachable;
 import org.bukkit.material.MaterialData;
@@ -37,7 +39,7 @@ public class Util {
 	}
 
 	public static void msg(CommandSender sender, String s) {
-		sender.sendMessage(ChatColor.DARK_RED + "[" + ChatColor.DARK_AQUA + "HungerGames" +ChatColor.DARK_RED +"] " + ChatColor.AQUA + ChatColor.translateAlternateColorCodes('&', s)); 
+		sender.sendMessage(ChatColor.DARK_RED + "[" + ChatColor.GOLD + "HungerGames" +ChatColor.DARK_RED +"] " + ChatColor.YELLOW + ChatColor.translateAlternateColorCodes('&', s)); 
 	}
 	
 	public static void scm(CommandSender sender, String s) {
@@ -45,7 +47,7 @@ public class Util {
 	}
 
 	public static void broadcast(String s) { 
-		Bukkit.getServer().broadcastMessage(ChatColor.DARK_RED + "[" + ChatColor.DARK_AQUA + "HungerGames" +ChatColor.DARK_RED +"] " + ChatColor.AQUA + ChatColor.translateAlternateColorCodes('&', s)); 
+		Bukkit.getServer().broadcastMessage(ChatColor.DARK_RED + "[" + ChatColor.GOLD + "HungerGames" +ChatColor.DARK_RED +"] " + ChatColor.YELLOW + ChatColor.translateAlternateColorCodes('&', s)); 
 	}
 
 	public static boolean isInt(String str) {
@@ -66,17 +68,30 @@ public class Util {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public static void clearInv(Player p) {
 		p.getInventory().clear();
 		p.getEquipment().clear();
-		p.getInventory().setHelmet(null);
-		p.getInventory().setChestplate(null);
-		p.getInventory().setLeggings(null);
-		p.getInventory().setBoots(null);
+		p.getInventory().setHelmet((ItemStack)null);
+		p.getInventory().setChestplate((ItemStack)null);
+		p.getInventory().setLeggings((ItemStack)null);
+		p.getInventory().setBoots((ItemStack)null);
 		p.updateInventory();
 	}
 
+	public static List<String> convertUUIDListToStringList(List<UUID> uuid) {
+		List<String> winners = new ArrayList<String>();
+		for (UUID id: uuid) {
+			winners.add(getOnlinePlayer(id).getName());
+		} return winners;
+	}
+	
+	public static Player getOnlinePlayer(UUID uuid) {
+		Player player = Bukkit.getPlayer(uuid);
+		if (player != null) {
+			return player;
+		} return null;
+	}
+	
 	public static String translateStop(List<String> win) {
 		String bc = null;
 		int count = 0;

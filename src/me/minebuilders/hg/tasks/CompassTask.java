@@ -1,5 +1,7 @@
 package me.minebuilders.hg.tasks;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -26,7 +28,7 @@ public class CompassTask implements Runnable {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 
 			if (p.getInventory().contains(Material.COMPASS)) {
-				PlayerData pd = plugin.players.get(p.getName());
+				PlayerData pd = plugin.players.get(p.getUniqueId());
 
 				if (pd != null) {
 
@@ -65,11 +67,11 @@ public class CompassTask implements Runnable {
 
 		Player player = null;
 
-		for (String s : g.getPlayers()) {
+		for (UUID u: g.getPlayers()) {
 
-			Player p2 = Bukkit.getPlayer(s);
+			Player p2 = Bukkit.getPlayer(u);
 
-			if (p2 != null && !p2.equals(p) && !pd.isOnTeam(s)) {
+			if (p2 != null && !p2.equals(p) && !pd.isOnTeam(u)) {
 
 				Location l = p2.getLocation();
 

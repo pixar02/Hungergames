@@ -10,12 +10,12 @@ public class KitCmd extends BaseCmd {
 		cmdName = "kit";
 		forceInGame = true;
 		argLength = 2;
-		usage = "<&ckit&b>";
+		usage = "<kit>";
 	}
 
 	@Override
 	public boolean run() {
-		Status st = HG.plugin.players.get(player.getName()).getGame().getStatus();
+		Status st = HG.plugin.players.get(player.getUniqueId()).getGame().getStatus();
 		if (st == Status.WAITING || st == Status.COUNTDOWN) {
 		HG.plugin.kit.setkit(player, args[1]);
 		} else {

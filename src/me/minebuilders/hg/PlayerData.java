@@ -2,6 +2,8 @@ package me.minebuilders.hg;
 
 import me.minebuilders.hg.Util;
 
+import java.util.UUID;
+
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +29,6 @@ public class PlayerData {
 		Util.clearInv(p);
 	}
 
-	@SuppressWarnings("deprecation")
 	public void restore(Player p) {
 		Util.clearInv(p);
 		p.setExp(0);
@@ -38,8 +39,8 @@ public class PlayerData {
 		p.updateInventory();
 	}
 	
-	public boolean isOnTeam(String s) {
-		return (team != null && team.isOnTeam(s));
+	public boolean isOnTeam(UUID u) {
+		return (team != null && team.isOnTeam(u));
 	}
 
 	public Game getGame() {

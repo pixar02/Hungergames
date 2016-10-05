@@ -11,11 +11,11 @@ import org.bukkit.potion.PotionEffect;
 
 public class KitEntry {
 
-	private ItemStack helm;
+	private ItemStack helm = (ItemStack)null;
 	private String perm;
-	private ItemStack boots;
-	private ItemStack chestplate;
-	private ItemStack pants;
+	private ItemStack boots = (ItemStack)null;
+	private ItemStack chestplate = (ItemStack)null;
+	private ItemStack pants = (ItemStack)null;
 	private ItemStack[] inventoryContents;
 	private ArrayList<PotionEffect> posions;
 
@@ -36,7 +36,6 @@ public class KitEntry {
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	public void setInventoryContent(Player p) {
 		Util.clearInv(p);
 		p.getInventory().setHelmet(helm);
@@ -49,7 +48,7 @@ public class KitEntry {
 			p.removePotionEffect(effect.getType());
 		}
 		p.addPotionEffects(posions);
-		HG.plugin.players.get(p.getName()).getGame().freeze(p);
+		HG.plugin.players.get(p.getUniqueId()).getGame().freeze(p);
 		p.updateInventory();
 	}
 }

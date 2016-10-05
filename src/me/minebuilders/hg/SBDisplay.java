@@ -24,17 +24,18 @@ public class SBDisplay {
 		this.board = manager.getNewScoreboard();
 		this.ob = board.registerNewObjective(ChatColor.GREEN + "Players-Alive:", "dummy");
 		this.ob.setDisplaySlot(DisplaySlot.SIDEBAR);
-		this.ob.setDisplayName(ChatColor.BLUE + "" + ChatColor.BOLD + "HungerGames");
+		this.ob.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "HungerGames");
 		this.g = g;
 	}
 
 	public void setAlive() {
-		Score score = ob.getScore(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Players-Alive:")); 
+		Score score = ob.getScore(ChatColor.GREEN + "Players-Alive:"); 
+		
 		score.setScore(g.getPlayers().size());
 	}
 
 	public void resetAlive() {
-		board.resetScores(Bukkit.getOfflinePlayer(ChatColor.GREEN + "Players-Alive:"));
+		board.resetScores(ChatColor.GREEN + "Players-Alive:");
 		score.clear();
 	}
 

@@ -9,7 +9,7 @@ public class DebugCmd extends BaseCmd {
 		cmdName = "debug";
 		forceInGame = false;
 		argLength = 2;
-		usage = "<&cgame&b>";
+		usage = "<game>";
 	}
 
 	@Override

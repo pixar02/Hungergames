@@ -17,15 +17,15 @@ public class CreateCmd extends BaseCmd {
 		forcePlayer = true;
 		cmdName = "create";
 		argLength = 5;
-		usage = "<&cname&b> <&cmin-player&b> <&cmax-player&b> <&ctime&b>";
+		usage = "<name> <min-player> <max-player> <time>";
 	}
 
 	@Override
 	public boolean run() {
-		if (!HG.plugin.playerses.containsKey(player.getName())) {
+		if (!HG.plugin.playerses.containsKey(player.getUniqueId())) {
 			Util.msg(player, ChatColor.RED + "You need to make a selection before making an arena!");
 		} else {
-			PlayerSession s = HG.plugin.playerses.get(player.getName());
+			PlayerSession s = HG.plugin.playerses.get(player.getUniqueId());
 			if (!s.hasValidSelection()) {
 				Util.msg(player, ChatColor.RED + "You need to make a selection before making an arena!");	
 			} else {

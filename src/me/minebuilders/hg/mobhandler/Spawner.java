@@ -1,6 +1,7 @@
 package me.minebuilders.hg.mobhandler;
 
 import java.util.Random;
+import java.util.UUID;
 
 import me.minebuilders.hg.Game;
 import me.minebuilders.hg.HG;
@@ -25,8 +26,8 @@ public class Spawner implements Runnable{
 
 	@Override
 	public void run() {
-		for (String s : g.getPlayers()) {
-			Player p = Bukkit.getPlayer(s);
+		for (UUID u : g.getPlayers()) {
+			Player p = Bukkit.getPlayer(u);
 			if (p != null) {
 				Location l = p.getLocation();
 				World w = l.getWorld();

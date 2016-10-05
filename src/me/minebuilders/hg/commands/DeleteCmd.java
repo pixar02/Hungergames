@@ -5,6 +5,8 @@ import me.minebuilders.hg.HG;
 import me.minebuilders.hg.Status;
 import me.minebuilders.hg.Util;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -15,7 +17,7 @@ public class DeleteCmd extends BaseCmd {
 		cmdName = "delete";
 		forceInGame = false;
 		argLength = 2;
-		usage = "<&carena-name&b>";
+		usage = "<arena-name>";
 	}
 
 	@Override
@@ -32,8 +34,8 @@ public class DeleteCmd extends BaseCmd {
 				}
 				if (!g.getPlayers().isEmpty()) {
 					Util.msg(sender, "  &7- &c&cPlayers detected! &aKicking..");
-					for (String s : g.getPlayers()) {
-						Player p = Bukkit.getPlayer(s);
+					for (UUID u : g.getPlayers()) {
+						Player p = Bukkit.getPlayer(u);
 						if (p != null) {
 							g.leave(p);
 						}

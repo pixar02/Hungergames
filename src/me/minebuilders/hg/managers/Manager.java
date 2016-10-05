@@ -3,22 +3,18 @@ package me.minebuilders.hg.managers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import me.minebuilders.hg.Bound;
 import me.minebuilders.hg.Config;
 import me.minebuilders.hg.Game;
 import me.minebuilders.hg.HG;
 import me.minebuilders.hg.Status;
 import me.minebuilders.hg.Util;
-
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -103,7 +99,11 @@ public class Manager {
 		}
 	}
 
-	public void restoreChests(Game arena) {
+	
+	//@Note: dwoikdopw
+	//We need to change this because we want to just create false chest./
+
+	/**public void restoreChests(Game arena) {
 		ArrayList<Location> chests = arena.getChests();
 		for (Location l : chests) {
 			Block b = l.getBlock();
@@ -117,6 +117,17 @@ public class Manager {
 					c--;
 				}
 			}
+		}
+	}*/
+	
+	public void fillChests(Block b) {
+		Inventory i = ((InventoryHolder)b.getState()).getInventory();
+		i.clear();
+		int c = rg.nextInt(Config.maxchestcontent) + 1;
+		while (c != 0) {
+			ItemStack it = randomitem();
+			i.setItem(rg.nextInt(27), it);
+			c--;
 		}
 	}
 

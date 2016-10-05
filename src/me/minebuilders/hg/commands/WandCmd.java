@@ -17,12 +17,12 @@ public class WandCmd extends BaseCmd {
 
 	@Override
 	public boolean run() {
-		if (HG.plugin.playerses.containsKey(player.getName())) {
-			HG.plugin.playerses.remove(player.getName());
+		if (HG.plugin.playerses.containsKey(player.getUniqueId())) {
+			HG.plugin.playerses.remove(player.getUniqueId());
 			Util.msg(player, "Wand disabled!");
 		} else {
 			player.getInventory().addItem(new ItemStack(Material.BLAZE_ROD, 1));
-			HG.plugin.playerses.put(player.getName(), new PlayerSession(null, null));
+			HG.plugin.playerses.put(player.getUniqueId(), new PlayerSession(null, null));
 			Util.msg(player, "Wand enabled!");
 		}
         return true;

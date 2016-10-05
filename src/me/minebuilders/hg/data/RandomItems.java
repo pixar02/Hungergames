@@ -2,12 +2,13 @@ package me.minebuilders.hg.data;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import me.minebuilders.hg.HG;
 import me.minebuilders.hg.Util;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -28,14 +29,18 @@ public class RandomItems {
 		if (customConfigFile == null) {
 			customConfigFile = new File(plugin.getDataFolder(), "items.yml");
 		}
-		item = YamlConfiguration.loadConfiguration(customConfigFile);
-
-		// Look for defaults in the jar
-		InputStream defConfigStream = plugin.getResource("items.yml");
-		if (defConfigStream != null) {
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			
-			item.setDefaults(defConfig);
+		if (!customConfigFile.exists()) {
+			try {
+				customConfigFile.createNewFile();
+			}
+			catch (IOException e) {
+				Bukkit.getServer().getLogger().severe(ChatColor.RED + "Could not create items.yml!");
+			}
+			item = YamlConfiguration.loadConfiguration(customConfigFile);
+			saveCustomConfig();
+			Util.log("New items.yml file has been successfully generated!");
+		} else {
+			item = YamlConfiguration.loadConfiguration(customConfigFile);
 		}
 	}
 

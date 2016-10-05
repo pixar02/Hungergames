@@ -28,8 +28,8 @@ public abstract class BaseCmd {
 			else player = (Player) s;
 		}
 		if (!s.hasPermission("hg." + cmdName))
-			sender.sendMessage(ChatColor.RED + "You do not have permission to use: " + ChatColor.GOLD + "/hg " + cmdName);
-		else if (forceInGame && !HG.plugin.players.containsKey(player.getName()))
+			sender.sendMessage(ChatColor.RED + "You do not have permission to use: " + ChatColor.RED + "/hg " + cmdName);
+		else if (forceInGame && !HG.plugin.players.containsKey(player.getUniqueId()))
 			sender.sendMessage(ChatColor.RED + "Your not in a valid game!");
 		else if (forceInRegion && !HG.manager.isInRegion(player.getLocation()))
 			sender.sendMessage(ChatColor.RED + "Your not in a valid HungerGames region!");
@@ -42,6 +42,6 @@ public abstract class BaseCmd {
 	public abstract boolean run();
 
 	public String sendHelpLine() {
-		return "&c/&3hg " + cmdName + " &b" + usage;
+		return "&c/hg &6" + cmdName + " &c" + usage;
 	}
 }

@@ -14,7 +14,7 @@ public class LeaveCmd extends BaseCmd {
 
 	@Override
 	public boolean run() {
-		HG.plugin.players.get(player.getName()).getGame().leave(player);
+		HG.plugin.players.get(player.getUniqueId()).getGame().leave(player);
 		Util.msg(player, "&cYou left Hungergames!");
 		return true;
 	}

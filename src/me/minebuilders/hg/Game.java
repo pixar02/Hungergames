@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
-
+import java.util.UUID;
 import me.minebuilders.hg.mobhandler.Spawner;
 import me.minebuilders.hg.tasks.ChestDropTask;
 import me.minebuilders.hg.tasks.FreeRoamTask;
 import me.minebuilders.hg.tasks.StartingTask;
 import me.minebuilders.hg.tasks.TimerTask;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -29,8 +28,9 @@ public class Game {
 	private String name;
 	private List<Location> spawns;
 	private Bound b;
-	private List<String> players = new ArrayList<String>();
-	private ArrayList<Location> chests = new ArrayList<Location>();
+	private List<UUID> players = new ArrayList<UUID>();
+	private List<Location> chests = new ArrayList<Location>();
+
 	private List<BlockState> blocks = new ArrayList<BlockState>();
 	private Location exit;
 	private Status status;
@@ -59,11 +59,10 @@ public class Game {
 		this.minplayers = minplayers;
 		this.maxplayers = maxplayers;
 		this.roamtime = roam;
-
 		if (isready) status = Status.STOPPED;
 		else status = Status.BROKEN;
 
-		setChests();
+
 		setLobbyBlock(lobbysign);
 
 		sb = new SBDisplay(this);
@@ -78,7 +77,6 @@ public class Game {
 		this.spawns = new ArrayList<Location>();
 		this.b = c;
 		status = Status.NOTREADY;
-		setChests();
 		sb = new SBDisplay(this);
 	}
 
@@ -102,6 +100,19 @@ public class Game {
 		if (s.getType() != Material.AIR) {
 			blocks.add(s);
 		}
+	}
+	
+	public void addChest(Location l) {
+		chests.add(l);
+	}
+	
+	public boolean isLoggedChest(Location l) {
+		if (chests.contains(l)) return true;
+		return false;
+	}
+	
+	public void removeChest(Location l) {
+		chests.remove(l);
 	}
 	
 	public void recordBlockBreak(Block bl) {
@@ -138,24 +149,17 @@ public class Game {
 		this.blocks.clear();
 	}
 
-	public void setChests() {
-		chests.clear();
-		for (Location bl : b.getBlocks(Material.CHEST)) {
-			chests.add(bl);
-		}
-	}
-
 	public void msgAllMulti(String[] sta) {
 		for (String s : sta) {
-			for (String st : players) {
-				Player p = Bukkit.getPlayer(st);
+			for (UUID u : players) {
+				Player p = Bukkit.getPlayer(u);
 				if (p != null)
 					Util.msg(p, s);
 			}
 		}
 	}
 
-	public List<String> getPlayers() {
+	public List<UUID> getPlayers() {
 		return players;
 	}
 
@@ -184,15 +188,15 @@ public class Game {
 			if (p.isInsideVehicle()) {
 				p.leaveVehicle();
 			}
-			players.add(p.getName());
-			HG.plugin.players.put(p.getName(), new PlayerData(p, this));
+			players.add(p.getUniqueId());
+			HG.plugin.players.put(p.getUniqueId(), new PlayerData(p, this));
 			p.teleport(pickSpawn());
 			heal(p);
 			freeze(p);
 			if (players.size() >= minplayers && status.equals(Status.WAITING)) {
 				startPreGame();
 			} else if (status == Status.WAITING) {
-				msgDef("&4(&3"+p.getName() + "&b Has joined the game"+(minplayers-players.size()<= 0?"!":": "+(minplayers-players.size())+" players to start!")+"&4)");
+				msgDef("&4(&6"+p.getName() + "&a Has joined the game"+(minplayers-players.size()<= 0?"!":": "+(minplayers-players.size())+" players to start!")+"&4)");
 			}
 			kitHelp(p);
 			if (players.size() == 1)
@@ -206,15 +210,15 @@ public class Game {
 	public void kitHelp(Player p) {
 		String kit = HG.plugin.kit.getKitList();
 		Util.scm(p, "&8     ");
-		Util.scm(p, "&9&l>----------[&b&lWelcome to HungerGames&9&l]----------<");
-		Util.scm(p, "&9&l - &bPick a kit using &c/hg kit <kit-name>");
-		Util.scm(p, "&9&lKits:&b" + kit);
-		Util.scm(p, "&9&l>------------------------------------------<");
+		Util.scm(p, "&4&l>----------[&6&lWelcome to HungerGames&4&l]----------<");
+		Util.scm(p, "&4&l - &6Pick a kit using &c/hg kit <kit-name>");
+		Util.scm(p, "&4&lKits:&c" + kit);
+		Util.scm(p, "&4&l>------------------------------------------<");
 	}
 
 	public void respawnAll() {
-		for (String st : players) {
-			Player p = Bukkit.getPlayer(st);
+		for (UUID u : players) {
+			Player p = Bukkit.getPlayer(u);
 			if (p != null)
 				p.teleport(pickSpawn());
 		}
@@ -228,7 +232,6 @@ public class Game {
 
 	public void startFreeRoam() {
 		status = Status.BEGINNING;
-		HG.manager.restoreChests(this);
 		b.removeEntities();
 		freeroam = new FreeRoamTask(this);
 	}
@@ -261,8 +264,8 @@ public class Game {
 	public boolean containsPlayer(Location l) {
 		if (l == null) return false;
 
-		for (String s : players) {
-			Player p = Bukkit.getPlayer(s);
+		for (UUID u : players) {
+			Player p = Bukkit.getPlayer(u);
 			if (p != null && p.getLocation().getBlock().equals(l.getBlock()))
 				return true;
 		}
@@ -270,16 +273,16 @@ public class Game {
 	}
 
 	public void msgAll(String s) {
-		for (String st : players) {
-			Player p = Bukkit.getPlayer(st);
+		for (UUID u : players) {
+			Player p = Bukkit.getPlayer(u);
 			if (p != null)
 				Util.msg(p, s);
 		}
 	}
 
 	public void msgDef(String s) {
-		for (String st : players) {
-			Player p = Bukkit.getPlayer(st);
+		for (UUID u : players) {
+			Player p = Bukkit.getPlayer(u);
 			if (p != null)
 				Util.scm(p, s);
 		}
@@ -357,16 +360,16 @@ public class Game {
 	}
 
 	public void stop() {
-		List<String> win = new ArrayList<String>();
+		List<UUID> win = new ArrayList<UUID>();
 		cancelTasks();
-		for (String s : players) {
-			Player p = Bukkit.getPlayer(s);
+		for (UUID u : players) {
+			Player p = Bukkit.getPlayer(u);
 			if (p != null) {
 				heal(p);
 				exit(p);
-				HG.plugin.players.get(p.getName()).restore(p);
-				HG.plugin.players.remove(p.getName());
-				win.add(p.getName());
+				HG.plugin.players.get(p.getUniqueId()).restore(p);
+				HG.plugin.players.remove(p.getUniqueId());
+				win.add(p.getUniqueId());
 				sb.restoreSB(p);
 			}
 		}
@@ -375,15 +378,15 @@ public class Game {
 		if (!win.isEmpty() && Config.giveReward) {
 			double db = Config.cash / win.size();
 
-			for (String s : win) {
-				Vault.economy.depositPlayer(s, db);
-				Player p = Bukkit.getPlayer(s);
+			for (UUID u : win) {
+				Vault.economy.depositPlayer(Bukkit.getServer().getOfflinePlayer(u), db);
+				Player p = Bukkit.getPlayer(u);
 				if (p != null)
 				Util.msg(p, "&aYou won " + db + " for winning HungerGames!");
 			}
 		}
-
-		Util.broadcast("&l&3" + Util.translateStop(win) + " &l&bWon HungerGames at arena " + name + "!");
+		chests.clear();
+		Util.broadcast("&l&6" + Util.translateStop(Util.convertUUIDListToStringList(win)) + " &l&aWon HungerGames at arena " + name + "!");
 		if (!blocks.isEmpty()) {
 			new Rollback(this);
 		} else {
@@ -395,18 +398,18 @@ public class Game {
 	}
 
 	public void leave(Player p) {
-		players.remove(p.getName());
+		players.remove(p.getUniqueId());
 		unFreeze(p);
 		heal(p);
 		exit(p);
-		HG.plugin.players.get(p.getName()).restore(p);
-		HG.plugin.players.remove(p.getName());
+		HG.plugin.players.get(p.getUniqueId()).restore(p);
+		HG.plugin.players.remove(p.getUniqueId());
 		if (status == Status.RUNNING || status == Status.BEGINNING) {
 			if (isGameOver()) {
 				stop();
 			}
 		} else if (status == Status.WAITING) {
-			msgDef("&3&l"+p.getName() + "&l&c Has left the game"+(minplayers-players.size()<= 0?"!":": "+(minplayers-players.size())+" players to start!"));
+			msgDef("&6&l"+p.getName() + "&l&c Has left the game"+(minplayers-players.size()<= 0?"!":": "+(minplayers-players.size())+" players to start!"));
 		}
 		updateLobbyBlock();
 		sb.restoreSB(p);
@@ -415,14 +418,14 @@ public class Game {
 
 	public boolean isGameOver() {
 		if (players.size() <= 1) return true; 
-		for (Entry<String, PlayerData> f : HG.plugin.players.entrySet()) {
+		for (Entry<UUID, PlayerData> f : HG.plugin.players.entrySet()) {
 
 			Team t = f.getValue().getTeam();
 
 			if (t != null && (t.getPlayers().size() >= players.size())) {
-				List<String> ps = t.getPlayers();
-				for (String s : players) {
-					if (!ps.contains(s)) {
+				List<UUID> ps = t.getPlayers();
+				for (UUID u : players) {
+					if (!ps.contains(u)) {
 						return false;
 					}
 				}
@@ -430,14 +433,6 @@ public class Game {
 			}
 		}
 		return false;
-	}
-
-	public void addChests(Location b) {
-		chests.add(b);
-	}
-
-	public ArrayList<Location> getChests() {
-		return chests;
 	}
 
 	public void exit(Player p) {

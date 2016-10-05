@@ -25,7 +25,7 @@ public class KillManager {
 
 	public String getKillString(String name, Entity e) {
 		switch (e.getType()) {
-		case PLAYER: return ("&3" + name + " &b&lWas killed by &3" + ((Player)e).getName() + " &busing a(n) &3" + ((Player)e).getItemInHand().getType().name().toLowerCase() + "&b!");
+		case PLAYER: return ("&6" + name + " &c&lWas killed by &6" + ((Player)e).getName() + " &cusing a(n) &6" + ((Player)e).getInventory().getItemInMainHand().getType().name().toLowerCase() + "&c!");
 		case ZOMBIE: return (name + " Was ripped to bits by a Zombie!");
 		case SKELETON: return (name + " Was shot in the face by a skeleton");
 		case ARROW: return (name + " Was shot in the face by a skeleton");

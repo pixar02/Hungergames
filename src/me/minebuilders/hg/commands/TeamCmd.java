@@ -1,5 +1,7 @@
 package me.minebuilders.hg.commands;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,12 +20,12 @@ public class TeamCmd extends BaseCmd {
 		cmdName = "team";
 		forceInGame = true;
 		argLength = 2;
-		usage = "<&cinvite&b/&caccept&b>";
+		usage = "<invite/accept>";
 	}
 
 	@Override
 	public boolean run() {
-		PlayerData pd = HG.plugin.players.get(player.getName());
+		PlayerData pd = HG.plugin.players.get(player.getUniqueId());
 		Game g = pd.getGame();
 
 		if (args[1].equalsIgnoreCase("invite")) {
@@ -32,7 +34,7 @@ public class TeamCmd extends BaseCmd {
 
 				Player p = Bukkit.getPlayer(args[2]);
 
-				if (p == null || !g.getPlayers().contains(p.getName())) {
+				if (p == null || !g.getPlayers().contains(p.getUniqueId())) {
 					Util.msg(player, "&c" + args[2] + " Is not available!");
 					return true;
 				}
@@ -41,12 +43,12 @@ public class TeamCmd extends BaseCmd {
 
 					Team t = pd.getTeam();
 
-					if (!t.getLeader().equalsIgnoreCase(player.getName())) {
+					if (!t.getLeader().equals(player.getUniqueId())) {
 						Util.msg(player, "&cOnly the leader can invite other players!");
 						return true;
 					}
-					if (t.isOnTeam(p.getName())) {
-						Util.msg(player, "&c" + args[2] + " &3is already on a team!");
+					if (t.isOnTeam(p.getUniqueId())) {
+						Util.msg(player, "&c" + args[2] + " &6is already on a team!");
 						return true;
 					}
 
@@ -55,43 +57,43 @@ public class TeamCmd extends BaseCmd {
 						return true;
 					}
 
-					HG.plugin.players.get(p.getName()).setTeam(t);
+					HG.plugin.players.get(p.getUniqueId()).setTeam(t);
 					t.invite(p);
-					Util.msg(player, "&c" + p.getName() + " &3Has been invited!");
+					Util.msg(player, "&c" + p.getName() + " &6Has been invited!");
 					return true;
 				}
 
-				if (HG.plugin.players.get(p.getName()).isOnTeam(p.getName())) {
-					Util.msg(player, "&c" + args[2] + " &3is already on a team!");
+				if (HG.plugin.players.get(p.getUniqueId()).isOnTeam(p.getUniqueId())) {
+					Util.msg(player, "&c" + args[2] + " &6is already on a team!");
 					return true;
 				}
 
-				Team t = new Team(player.getName());
-				HG.plugin.players.get(p.getName()).setTeam(t);
+				Team t = new Team(player.getUniqueId());
+				HG.plugin.players.get(p.getUniqueId()).setTeam(t);
 				pd.setTeam(t);
 				t.invite(p);
-				Util.msg(player, "&c" + p.getName() + " &3Has been invited!");
+				Util.msg(player, "&c" + p.getName() + " &6Has been invited!");
 				return true;
 			} else {
-				Util.msg(player, "&cWrong Usage: &3/hg &bteam invite <&cname&b>");
+				Util.msg(player, "&cWrong Usage: &6/hg team invite &c<name>");
 			}
 		} else if (args[1].equalsIgnoreCase("accept")) {
 
-			Team t = HG.plugin.players.get(player.getName()).getTeam();
+			Team t = HG.plugin.players.get(player.getUniqueId()).getTeam();
 
 			if (t == null) {
 				Util.msg(player, "&cYou have no pending invites...");
 				return true;
 			}
-			if (t.getPenders().contains(player.getName())) {
+			if (t.getPenders().contains(player.getUniqueId())) {
 
 				t.acceptInvite(player);
-				for (String s : t.getPlayers()) {
-					Player p = Bukkit.getPlayer(s);
+				for (UUID u : t.getPlayers()) {
+					Player p = Bukkit.getPlayer(u);
 
 					if (p != null) {
 						Util.scm(p, "&6*&b&m                                                                             &6*");
-						Util.scm(p, ChatColor.WHITE + player.getName() + " &3Just joined your team!");
+						Util.scm(p, ChatColor.WHITE + player.getName() + " &6Just joined your team!");
 						Util.scm(p, "&6*&b&m                                                                             &6*");
 					}
 					return true;

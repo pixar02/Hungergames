@@ -13,7 +13,7 @@ public class StartCmd extends BaseCmd {
 		cmdName = "forcestart";
 		forceInGame = false;
 		argLength = 2;
-		usage = "<&cgame&b>";
+		usage = "<game>";
 	}
 
 	@Override
@@ -21,7 +21,7 @@ public class StartCmd extends BaseCmd {
 		Game g = HG.manager.getGame(args[1]);
 		if (g != null) {
 			g.startPreGame();
-			Util.scm(sender, "&3" + args[1] + "&b is now starting!");
+			Util.scm(sender, "&6" + args[1] + "&c is now starting!");
 		} else {
 			sender.sendMessage(ChatColor.RED + "This game does not exist!");
 		}

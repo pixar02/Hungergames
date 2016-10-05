@@ -3,6 +3,7 @@ package me.minebuilders.hg;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import me.minebuilders.hg.commands.AddSpawnCmd;
 import me.minebuilders.hg.commands.BaseCmd;
@@ -40,11 +41,18 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class HG extends JavaPlugin {
+	
+	/** Things to fix
+	 * 
+	 * Block breaking on selection of left click
+	 * Colors are fucking ugly
+	 * Cant select kits when in game
+	 */
 
 	//Maps
 	public HashMap<String, BaseCmd> cmds = new HashMap<String, BaseCmd>();
-	public HashMap<String, PlayerData> players = new HashMap<String, PlayerData>();
-	public HashMap<String, PlayerSession> playerses = new HashMap<String, PlayerSession>();
+	public HashMap<UUID, PlayerData> players = new HashMap<UUID, PlayerData>();
+	public HashMap<UUID, PlayerSession> playerses = new HashMap<UUID, PlayerSession>();
 	public HashMap<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
 	
 	//Lists
@@ -115,16 +123,16 @@ public class HG extends JavaPlugin {
 	}
 
 	public void stopAll() {
-		ArrayList<String> ps = new ArrayList<String>();
+		ArrayList<UUID> ps = new ArrayList<UUID>();
 		for (Game g : games) {
 			g.cancelTasks();
 			g.forceRollback();
 			ps.addAll(g.getPlayers());
 		}
-		for (String s : ps) {
-			Player p = Bukkit.getPlayer(s);
+		for (UUID u : ps) {
+			Player p = Bukkit.getPlayer(u);
 			if (p != null) {
-				players.get(s).getGame().leave(p);
+				players.get(u).getGame().leave(p);
 			}
 		}
 		players.clear();
