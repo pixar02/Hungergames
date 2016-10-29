@@ -78,6 +78,9 @@ public class HG extends JavaPlugin {
 		ri = new RandomItems(this);
 		manager = new Manager(this);
 		getCommand("hg").setExecutor(new CommandListener(this));
+		if(Config.leaveCmd == true){
+			getCommand("leave").setExecutor(new Leave());
+		}
 		getServer().getPluginManager().registerEvents(new WandListener(this), this);
 		getServer().getPluginManager().registerEvents(new CancelListener(this), this);
 		getServer().getPluginManager().registerEvents(new GameListener(this), this);
