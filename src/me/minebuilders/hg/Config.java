@@ -23,6 +23,7 @@ public class Config {
 	public static int maxchestcontent;
 	public static boolean teleAtEnd;
 	public static int maxTeam;
+	public static boolean leavecmd;
 
 	//Reward info
 	public static boolean giveReward;
